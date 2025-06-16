@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>User Login</title>
+    <link rel="stylesheet" href="login.css">
+    <style>
+        #loginMessage {
+            margin-top: 10px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <form id="loginForm">
+        <fieldset>
+            <legend>User Login</legend>
+            <table>
+                <tr>
+                    <td>Username <br>
+                        <input type="text" name="username" required />
+                    </td>
+                </tr>
+                <tr>
+                    <td>Password <br>
+                        <input type="password" name="password" required />
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="submit" value="Login" />
+                        <input type="button" value="Register" onclick="window.location.href='reg.html'" />
+                        <p id="loginMessage"></p> <!-- Message area -->
+                    </td>
+                </tr>
+            </table>
+        </fieldset>
+    </form>
+
+    <script>
+    document.getElementById("loginForm").addEventListener("submit", function(e) {
+        e.preventDefault();
+
+        const formData = new FormData(this);
+        const message = document.getElementById("loginMessage");
+
+        fetch("login.php", {
+            method: "POST",
+            body: formData
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                window.location.href = "home.php";
+            } else {
+                message.textContent = data.message;
+                message.style.color = "red";
+            }
+        })
+        .catch(error => {
+            message.textContent = "Something went wrong.";
+            message.style.color = "red";
+        });
+    });
+    </script>
+
+</body>
+</html>
